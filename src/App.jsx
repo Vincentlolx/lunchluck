@@ -214,19 +214,30 @@ export default function LunchLuckApp() {
     const winner = restaurants[randomIndex];
 
     const sliceAngle = 360 / restaurants.length;
+
+    // Pointer sits at top center
+    // Pointer aligns exactly to the center of each wheel slice
     const pointerOffset = 276;
+
+    // Normalize current wheel position
     const normalizedRotation = rotation % 360;
+
+    // Calculate exact angle needed for selected slice
     const targetRotation =
       pointerOffset -
       (randomIndex * sliceAngle + sliceAngle / 2);
 
+    // Difference between current and target
     let delta = targetRotation - normalizedRotation;
 
+    // Keep positive spin direction
     if (delta < 0) {
       delta += 360;
     }
 
+    // Add extra spins for animation
     const extraSpins = 360 * 6;
+
     const finalRotation = rotation + extraSpins + delta;
 
     setRotation(finalRotation);
@@ -259,32 +270,29 @@ export default function LunchLuckApp() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 flex flex-col items-center justify-center p-4 md:p-6 overflow-hidden">
-      <div className="text-center mb-8 md:mb-10">
-        <h1 className="text-5xl md:text-7xl font-black text-orange-600 drop-shadow-xl tracking-tight">
+    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 flex flex-col items-center justify-center p-6 overflow-hidden">
+      <div className="text-center mb-10">
+        <h1 className="text-6xl md:text-7xl font-black text-orange-600 drop-shadow-xl tracking-tight">
           🍜 LunchLuck
         </h1>
 
-        <p className="mt-2 md:mt-3 text-base md:text-lg text-gray-700 font-medium">
+        <p className="mt-3 text-lg text-gray-700 font-medium">
           Spin the wheel and let fate decide lunch.
         </p>
       </div>
 
-      <div className="relative flex items-center justify-center mb-8 md:mb-12">
-        {/* Pointer */}
-        <div className="absolute -top-8 md:-top-10 z-30 flex flex-col items-center animate-bounce">
-          <div className="w-5 md:w-7 h-5 md:h-7 rounded-full bg-red-600 border-2 md:border-4 border-white shadow-xl" />
-          <div className="w-0 h-0 border-l-4 md:border-l-6 border-r-4 md:border-r-6 border-t-8 md:border-t-10 border-l-transparent border-r-transparent border-t-red-600 drop-shadow-xl" />
+      <div className="relative flex items-center justify-center">
+        <div className="absolute -top-10 z-30 flex flex-col items-center animate-bounce">
+          <div className="w-7 h-7 rounded-full bg-red-600 border-4 border-white shadow-xl" />
+
+          <div className="w-0 h-0 border-l-[22px] border-r-[22px] border-t-[42px] border-l-transparent border-r-transparent border-t-red-600 drop-shadow-xl" />
         </div>
 
-        {/* Wheel */}
         <div
-          className="relative rounded-full border-8 md:border-12 border-white shadow-2xl overflow-hidden"
+          className="relative rounded-full border-[12px] border-white shadow-2xl overflow-hidden"
           style={{
-            width: "min(90vw, 350px)",
-            height: "min(90vw, 350px)",
-            maxWidth: "350px",
-            maxHeight: "350px",
+            width: 430,
+            height: 430,
             background: `conic-gradient(${conicGradient})`,
             transform: `rotate(${rotation}deg)`,
             transition: spinning
@@ -301,12 +309,12 @@ export default function LunchLuckApp() {
                 key={restaurant.name}
                 className="absolute left-1/2 top-1/2 origin-left"
                 style={{
-                  transform: `rotate(${angle + sliceAngle / 2}deg) translateX(50%)`,
-                  width: "40%",
+                  transform: `rotate(${angle + sliceAngle / 2}deg) translateX(16px)`,
+                  width: "45%",
                 }}
               >
-                <div className="flex justify-start pl-2">
-                  <span className="text-[9px] md:text-xs font-bold text-white drop-shadow-lg line-clamp-2 max-w-[80px]">
+                <div className="flex justify-end pr-4">
+                  <span className="text-[10px] md:text-xs font-black text-white drop-shadow-lg truncate max-w-[120px]">
                     {restaurant.name}
                   </span>
                 </div>
@@ -314,12 +322,11 @@ export default function LunchLuckApp() {
             );
           })}
 
-          {/* Center Button */}
-          <div className="absolute inset-12 md:inset-20 rounded-full bg-white shadow-inner flex items-center justify-center border-4 md:border-8 border-orange-100">
+          <div className="absolute inset-[120px] rounded-full bg-white shadow-inner flex items-center justify-center border-[8px] border-orange-100">
             <button
               onClick={spinRoulette}
               disabled={spinning}
-              className="w-20 md:w-32 h-20 md:h-32 rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-white text-lg md:text-2xl font-black shadow-2xl hover:scale-105 active:scale-95 transition-all disabled:opacity-75"
+              className="w-32 h-32 rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-white text-2xl font-black shadow-2xl hover:scale-105 active:scale-95 transition-all"
             >
               {spinning ? "🎲" : "SPIN"}
             </button>
@@ -327,22 +334,21 @@ export default function LunchLuckApp() {
         </div>
       </div>
 
-      {/* Restaurant Card */}
-      <div className="bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl border border-white max-w-2xl w-full">
+      <div className="mt-10 bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl border border-white max-w-2xl w-full">
         <img
           src={selected.image}
           alt={selected.name}
-          className="w-full h-48 md:h-72 object-cover"
+          className="w-full h-72 object-cover"
         />
 
-        <div className="p-4 md:p-6">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="p-6">
+          <div className="flex flex-wrap items-center justify-between gap-4">
             <div>
-              <h2 className="text-2xl md:text-3xl font-black text-gray-800">
+              <h2 className="text-3xl font-black text-gray-800">
                 {selected.name}
               </h2>
 
-              <p className="text-orange-600 text-base md:text-lg font-semibold mt-1">
+              <p className="text-orange-600 text-lg font-semibold mt-1">
                 {selected.cuisine}
               </p>
             </div>
@@ -355,21 +361,21 @@ export default function LunchLuckApp() {
                 e.preventDefault();
                 openMaps(selected.maps);
               }}
-              className="px-4 md:px-6 py-2 md:py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold shadow-lg hover:scale-105 transition-transform inline-flex items-center justify-center text-sm md:text-base whitespace-nowrap"
+              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold shadow-lg hover:scale-105 transition-transform inline-flex items-center justify-center"
             >
-              📍 Maps
+              📍 Open Google Maps
             </a>
           </div>
 
-          <div className="mt-4 md:mt-5 bg-orange-50 border border-orange-100 rounded-2xl p-3 md:p-4">
-            <p className="text-gray-700 leading-relaxed text-sm md:text-base">
+          <div className="mt-5 bg-orange-50 border border-orange-100 rounded-2xl p-4">
+            <p className="text-gray-700 leading-relaxed">
               Feeling indecisive? LunchLuck randomly picks one of the most popular lunch spots around KL Sentral and NU Sentral.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="mt-6 md:mt-8 text-xs md:text-sm text-gray-500 text-center">
+      <div className="mt-8 text-sm text-gray-500 text-center">
         Built for hungry office warriors around KL Sentral 🍛
       </div>
     </div>
