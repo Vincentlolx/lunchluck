@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/lunchluck/static/css/main.1ed658e9.css",
-    "main.js": "/lunchluck/static/js/main.f2cd8b79.js",
+    "main.js": "/lunchluck/static/js/main.cbf2b711.js",
     "index.html": "/lunchluck/index.html",
     "main.1ed658e9.css.map": "/lunchluck/static/css/main.1ed658e9.css.map",
-    "main.f2cd8b79.js.map": "/lunchluck/static/js/main.f2cd8b79.js.map"
+    "main.cbf2b711.js.map": "/lunchluck/static/js/main.cbf2b711.js.map"
   },
   "entrypoints": [
     "static/css/main.1ed658e9.css",
-    "static/js/main.f2cd8b79.js"
+    "static/js/main.cbf2b711.js"
   ]
 }
