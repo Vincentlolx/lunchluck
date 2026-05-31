@@ -128,60 +128,6 @@ export default function LunchLuckApp() {
       image: "https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?q=80&w=1200&auto=format&fit=crop",
       maps: "https://www.google.com/maps/search/?api=1&query=Padi+House+KL+Sentral",
     },
-    {
-      name: "Johnny's",
-      cuisine: "Steamboat",
-      image: "https://images.unsplash.com/photo-1547592180-85f173990554?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=Johnnys+Restaurant+NU+Sentral",
-    },
-    {
-      name: "Jollibee",
-      cuisine: "Fast Food",
-      image: "https://images.unsplash.com/photo-1550547660-d9450f859349?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=Jollibee+NU+Sentral",
-    },
-    {
-      name: "Manhattan Fish Market",
-      cuisine: "Seafood",
-      image: "https://images.unsplash.com/photo-1544025162-d76694265947?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=Manhattan+Fish+Market+NU+Sentral",
-    },
-    {
-      name: "Auntie Anne's",
-      cuisine: "Snacks",
-      image: "https://images.unsplash.com/photo-1525755662778-989d0524087e?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=Auntie+Annes+NU+Sentral",
-    },
-    {
-      name: "KFC",
-      cuisine: "Fried Chicken",
-      image: "https://images.unsplash.com/photo-1513639776629-7b61b0ac49cb?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=KFC+KL+Sentral",
-    },
-    {
-      name: "Chicken Rice Shop",
-      cuisine: "Chicken Rice",
-      image: "https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=Chicken+Rice+Shop+NU+Sentral",
-    },
-    {
-      name: "Pizza Hut",
-      cuisine: "Pizza",
-      image: "https://images.unsplash.com/photo-1513104890138-7c749659a591?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=Pizza+Hut+NU+Sentral",
-    },
-    {
-      name: "O'Briens",
-      cuisine: "Sandwiches",
-      image: "https://images.unsplash.com/photo-1528735602780-2552fd46c7af?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=Obriens+KL+Sentral",
-    },
-    {
-      name: "OldTown White Coffee",
-      cuisine: "Cafe",
-      image: "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?q=80&w=1200&auto=format&fit=crop",
-      maps: "https://www.google.com/maps/search/?api=1&query=OldTown+White+Coffee+KL+Sentral",
-    },
   ];
 
   const [selected, setSelected] = useState(restaurants[0]);
@@ -189,21 +135,15 @@ export default function LunchLuckApp() {
   const [rotation, setRotation] = useState(0);
 
   const colors = [
-    "#f97316",
-    "#ef4444",
-    "#facc15",
-    "#fb7185",
-    "#fb923c",
-    "#f43f5e",
+    "#FF6B6B", // Red
+    "#FF8E72", // Orange-red
+    "#FFA500", // Orange
+    "#FFD700", // Gold
+    "#FFED4E", // Yellow
+    "#FF1493", // Pink
   ];
 
-  const conicGradient = restaurants
-    .map((_, index) => {
-      const start = (360 / restaurants.length) * index;
-      const end = (360 / restaurants.length) * (index + 1);
-      return `${colors[index % colors.length]} ${start}deg ${end}deg`;
-    })
-    .join(", ");
+  const sliceAngle = 360 / restaurants.length;
 
   const spinRoulette = () => {
     if (spinning) return;
@@ -213,171 +153,151 @@ export default function LunchLuckApp() {
     const randomIndex = Math.floor(Math.random() * restaurants.length);
     const winner = restaurants[randomIndex];
 
-    const sliceAngle = 360 / restaurants.length;
-
-    // Pointer sits at top center
-    // Pointer aligns exactly to the center of each wheel slice
-    const pointerOffset = 276;
-
-    // Normalize current wheel position
-    const normalizedRotation = rotation % 360;
-
-    // Calculate exact angle needed for selected slice
-    const targetRotation =
-      pointerOffset -
-      (randomIndex * sliceAngle + sliceAngle / 2);
-
-    // Difference between current and target
-    let delta = targetRotation - normalizedRotation;
-
-    // Keep positive spin direction
-    if (delta < 0) {
-      delta += 360;
-    }
-
-    // Add extra spins for animation
-    const extraSpins = 360 * 6;
-
-    const finalRotation = rotation + extraSpins + delta;
+    const extraSpins = 360 * 5;
+    const targetRotation = -(randomIndex * sliceAngle) + 90;
+    const finalRotation = rotation + extraSpins + targetRotation;
 
     setRotation(finalRotation);
 
     setTimeout(() => {
       setSelected(winner);
       setSpinning(false);
-    }, 4200);
+    }, 4000);
   };
 
   const openMaps = (url) => {
-    try {
-      const newWindow = window.open(url, "_blank");
-
-      if (newWindow) {
-        newWindow.opener = null;
-        newWindow.focus();
-      } else {
-        const link = document.createElement("a");
-        link.href = url;
-        link.target = "_blank";
-        link.rel = "noopener noreferrer";
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-      }
-    } catch (err) {
-      console.error("Unable to open Google Maps", err);
-    }
+    window.open(url, "_blank", "noopener,noreferrer");
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-100 via-yellow-50 to-red-100 flex flex-col items-center justify-center p-6 overflow-hidden">
-      <div className="text-center mb-10">
-        <h1 className="text-6xl md:text-7xl font-black text-orange-600 drop-shadow-xl tracking-tight">
+    <div className="min-h-screen bg-gradient-to-b from-amber-50 to-orange-50 flex flex-col items-center justify-start pt-4 md:pt-8 pb-6 px-4 overflow-x-hidden">
+      {/* Header */}
+      <div className="text-center mb-4 md:mb-6">
+        <h1 className="text-4xl md:text-5xl font-bold text-orange-600 flex items-center justify-center gap-2">
           🍜 LunchLuck
         </h1>
-
-        <p className="mt-3 text-lg text-gray-700 font-medium">
+        <p className="text-gray-700 text-sm md:text-base mt-1">
           Spin the wheel and let fate decide lunch.
         </p>
       </div>
 
-      <div className="relative flex items-center justify-center">
-        <div className="absolute -top-10 z-30 flex flex-col items-center animate-bounce">
-          <div className="w-7 h-7 rounded-full bg-red-600 border-4 border-white shadow-xl" />
-
-          <div className="w-0 h-0 border-l-[22px] border-r-[22px] border-t-[42px] border-l-transparent border-r-transparent border-t-red-600 drop-shadow-xl" />
+      {/* Wheel Container */}
+      <div className="flex flex-col items-center gap-4 md:gap-6 w-full max-w-2xl flex-1">
+        {/* Pointer */}
+        <div className="h-8 md:h-12 flex justify-center items-end">
+          <div className="flex flex-col items-center z-20">
+            <div className="w-3 h-3 md:w-4 md:h-4 bg-red-600 rounded-full shadow-lg"></div>
+            <div className="w-0 h-0 border-l-2 md:border-l-3 border-r-2 md:border-r-3 border-t-5 md:border-t-6 border-l-transparent border-r-transparent border-t-red-600 drop-shadow-lg"></div>
+          </div>
         </div>
 
-        <div
-          className="relative rounded-full border-[12px] border-white shadow-2xl overflow-hidden"
-          style={{
-            width: 430,
-            height: 430,
-            background: `conic-gradient(${conicGradient})`,
-            transform: `rotate(${rotation}deg)`,
-            transition: spinning
-              ? "transform 4.2s cubic-bezier(0.15, 0.85, 0.2, 1)"
-              : "none",
-          }}
-        >
-          {restaurants.map((restaurant, index) => {
-            const sliceAngle = 360 / restaurants.length;
-            const angle = (360 / restaurants.length) * index;
+        {/* Wheel */}
+        <div className="flex justify-center items-center flex-1">
+          <div
+            className="relative rounded-full border-8 md:border-10 border-white shadow-2xl"
+            style={{
+              width: "min(85vw, 340px)",
+              height: "min(85vw, 340px)",
+              transform: `rotate(${rotation}deg)`,
+              transition: spinning ? "transform 4s cubic-bezier(0.25, 0.46, 0.45, 0.94)" : "none",
+            }}
+          >
+            {/* Wheel Segments */}
+            {restaurants.map((restaurant, index) => {
+              const startAngle = index * sliceAngle;
+              const color = colors[index % colors.length];
+              const midAngle = startAngle + sliceAngle / 2;
+              const x = 50 + 45 * Math.cos((midAngle - 90) * (Math.PI / 180));
+              const y = 50 + 45 * Math.sin((midAngle - 90) * (Math.PI / 180));
 
-            return (
-              <div
-                key={restaurant.name}
-                className="absolute left-1/2 top-1/2 origin-left"
-                style={{
-                  transform: `rotate(${angle + sliceAngle / 2}deg) translateX(16px)`,
-                  width: "45%",
-                }}
-              >
-                <div className="flex justify-end pr-4">
-                  <span className="text-[10px] md:text-xs font-black text-white drop-shadow-lg truncate max-w-[120px]">
-                    {restaurant.name}
-                  </span>
+              return (
+                <div
+                  key={restaurant.name}
+                  className="absolute w-full h-full"
+                  style={{
+                    clipPath: `polygon(50% 50%, 50% 0%, ${50 + 50 * Math.cos((startAngle - 90) * (Math.PI / 180))}% ${50 + 50 * Math.sin((startAngle - 90) * (Math.PI / 180))}%, ${50 + 50 * Math.cos((startAngle + sliceAngle - 90) * (Math.PI / 180))}% ${50 + 50 * Math.sin((startAngle + sliceAngle - 90) * (Math.PI / 180))})`,
+                    backgroundColor: color,
+                  }}
+                />
+              );
+            })}
+
+            {/* Text Labels - Radially positioned */}
+            {restaurants.map((restaurant, index) => {
+              const midAngle = (index * sliceAngle + sliceAngle / 2) * (Math.PI / 180);
+              const x = 50 + 32 * Math.cos(midAngle - Math.PI / 2);
+              const y = 50 + 32 * Math.sin(midAngle - Math.PI / 2);
+
+              return (
+                <div
+                  key={`label-${restaurant.name}`}
+                  className="absolute text-white text-xs font-bold drop-shadow-lg text-center"
+                  style={{
+                    left: `${x}%`,
+                    top: `${y}%`,
+                    transform: `translate(-50%, -50%) rotate(${index * sliceAngle + sliceAngle / 2}deg)`,
+                    width: "50px",
+                    maxWidth: "50px",
+                  }}
+                >
+                  <p className="line-clamp-2">{restaurant.name}</p>
                 </div>
-              </div>
-            );
-          })}
+              );
+            })}
 
-          <div className="absolute inset-[120px] rounded-full bg-white shadow-inner flex items-center justify-center border-[8px] border-orange-100">
-            <button
-              onClick={spinRoulette}
-              disabled={spinning}
-              className="w-32 h-32 rounded-full bg-gradient-to-br from-orange-500 to-red-500 text-white text-2xl font-black shadow-2xl hover:scale-105 active:scale-95 transition-all"
-            >
-              {spinning ? "🎲" : "SPIN"}
-            </button>
+            {/* Center Button */}
+            <div className="absolute inset-0 flex items-center justify-center z-10">
+              <button
+                onClick={spinRoulette}
+                disabled={spinning}
+                className="w-20 md:w-28 h-20 md:h-28 rounded-full bg-gradient-to-b from-orange-500 to-orange-600 text-white text-lg md:text-xl font-black shadow-2xl hover:scale-110 active:scale-95 transition-transform disabled:opacity-75 border-4 md:border-6 border-white"
+              >
+                {spinning ? "🎲" : "SPIN"}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      <div className="mt-10 bg-white/80 backdrop-blur-xl rounded-3xl overflow-hidden shadow-2xl border border-white max-w-2xl w-full">
+      {/* Restaurant Card */}
+      <div className="w-full max-w-md md:max-w-2xl mt-4 md:mt-6 bg-white rounded-3xl overflow-hidden shadow-2xl border-2 border-gray-100">
         <img
           src={selected.image}
           alt={selected.name}
-          className="w-full h-72 object-cover"
+          className="w-full h-32 md:h-48 object-cover"
         />
 
-        <div className="p-6">
-          <div className="flex flex-wrap items-center justify-between gap-4">
-            <div>
-              <h2 className="text-3xl font-black text-gray-800">
+        <div className="p-4 md:p-6">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-4">
+            <div className="flex-1">
+              <h2 className="text-xl md:text-2xl font-bold text-gray-900">
                 {selected.name}
               </h2>
-
-              <p className="text-orange-600 text-lg font-semibold mt-1">
+              <p className="text-orange-600 text-sm md:text-base font-semibold mt-1">
                 {selected.cuisine}
               </p>
             </div>
 
-            <a
-              href={selected.maps}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => {
-                e.preventDefault();
-                openMaps(selected.maps);
-              }}
-              className="px-6 py-3 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold shadow-lg hover:scale-105 transition-transform inline-flex items-center justify-center"
+            <button
+              onClick={() => openMaps(selected.maps)}
+              className="px-4 md:px-6 py-2 md:py-2.5 rounded-full bg-orange-500 hover:bg-orange-600 text-white font-bold shadow-lg transition-all hover:scale-105 active:scale-95 text-xs md:text-sm whitespace-nowrap"
             >
               📍 Open Google Maps
-            </a>
+            </button>
           </div>
 
-          <div className="mt-5 bg-orange-50 border border-orange-100 rounded-2xl p-4">
-            <p className="text-gray-700 leading-relaxed">
+          <div className="mt-3 md:mt-4 bg-amber-50 border border-amber-200 rounded-2xl p-3 md:p-4">
+            <p className="text-gray-700 text-xs md:text-sm leading-relaxed">
               Feeling indecisive? LunchLuck randomly picks one of the most popular lunch spots around KL Sentral and NU Sentral.
             </p>
           </div>
         </div>
       </div>
 
-      <div className="mt-8 text-sm text-gray-500 text-center">
+      {/* Footer */}
+      <p className="text-xs md:text-sm text-gray-500 mt-4 text-center">
         Built for hungry office warriors around KL Sentral 🍛
-      </div>
+      </p>
     </div>
   );
 }
