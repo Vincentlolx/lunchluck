@@ -296,7 +296,7 @@ export default function LunchLuckApp() {
 
       {/* Footer */}
       <p className="text-xs md:text-sm text-gray-500 mt-4 text-center">
-        Built for hungry office warriors around KL Sentral! 🍛
+        Built for hungry office warriors around KL Sentral 🍛
       </p>
     </div>
   );
