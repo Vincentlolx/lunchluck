@@ -361,7 +361,7 @@ export default function LunchLuckApp() {
       </div>
 
       <div className="mt-8 text-sm text-gray-500 text-center max-w-lg">
-        Built for hungry office warriors around KL Sentral 🍛
+        Built for hungry office warriors around KL Sentral! 🍛
       </div>
     </div>
   );
